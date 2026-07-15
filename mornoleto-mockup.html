@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mornoleto — Dress With Trust</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0d;
+    --surface:#151417;
+    --surface-2:#1c1b1f;
+    --text:#f5f4f1;
+    --muted:#9b9aa1;
+    --muted-2:#6c6b72;
+    --line:rgba(245,244,241,0.09);
+    --line-strong:rgba(245,244,241,0.16);
+    --grad: linear-gradient(120deg, #FFC247 0%, #FF5B45 48%, #E6228C 100%);
+    --grad-soft: linear-gradient(120deg, rgba(255,194,71,0.5) 0%, rgba(255,91,69,0.5) 48%, rgba(230,34,140,0.5) 100%);
+    --radius: 3px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:#FF5B45; color:#0b0b0d; }
+
+  .display{ font-family:'Bricolage Grotesque', sans-serif; }
+  .mono{ font-family:'Space Mono', monospace; }
+
+  .grad-text{
+    background:var(--grad);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
+  .wrap{ max-width:1240px; margin:0 auto; padding:0 32px; }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    padding:20px 0;
+    transition: background .4s ease, border-color .4s ease, padding .4s ease;
+    border-bottom:1px solid transparent;
+  }
+  .nav.scrolled{
+    background:rgba(11,11,13,0.82);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+  }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand img{ width:34px; height:34px; border-radius:50%; }
+  .brand span{ font-size:15px; letter-spacing:0.14em; font-weight:600; }
+  .nav-links{ display:flex; gap:36px; font-size:13px; letter-spacing:0.06em; color:var(--muted); }
+  .nav-links a{ position:relative; padding-bottom:4px; transition:color .25s ease; }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:0; width:0; height:1px;
+    background:var(--grad); transition:width .3s ease;
+  }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-cta{
+    display:flex; align-items:center; gap:18px;
+  }
+  .bag{
+    font-size:13px; letter-spacing:0.04em; color:var(--text);
+    border:1px solid var(--line-strong); padding:8px 16px; border-radius:999px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .bag .dot{ width:6px; height:6px; border-radius:50%; background:var(--grad); }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex; align-items:center;
+    padding-top:120px; padding-bottom:80px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';
+    position:absolute; top:-20%; right:-15%;
+    width:760px; height:760px;
+    background:radial-gradient(circle, rgba(255,91,69,0.16) 0%, rgba(230,34,140,0.08) 45%, transparent 70%);
+    filter:blur(10px);
+    pointer-events:none;
+  }
+  .hero-inner{ position:relative; z-index:2; max-width:760px; }
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-size:12px; letter-spacing:0.18em; color:var(--muted);
+    margin-bottom:28px;
+    opacity:0; animation: rise .7s ease forwards; animation-delay:.1s;
+  }
+  .eyebrow .pulse{
+    width:7px; height:7px; border-radius:50%; background:var(--grad);
+    box-shadow:0 0 0 0 rgba(255,91,69,0.5);
+    animation:pulse 2.4s infinite;
+  }
+  .hero-logo{
+    width:64px; height:64px; border-radius:50%;
+    margin-bottom:30px;
+    opacity:0; animation: rise .7s ease forwards; animation-delay:.22s;
+  }
+  h1.headline{
+    font-size:clamp(48px, 7.2vw, 92px);
+    line-height:0.98;
+    letter-spacing:-0.01em;
+    font-weight:800;
+    text-transform:uppercase;
+    margin-bottom:26px;
+  }
+  h1.headline span{
+    display:block;
+    opacity:0; transform:translateY(24px);
+    animation: rise .8s cubic-bezier(.22,.9,.3,1) forwards;
+  }
+  h1.headline span:nth-child(1){ animation-delay:.32s; }
+  h1.headline span:nth-child(2){ animation-delay:.44s; }
+
+  .subhead{
+    font-size:17px; line-height:1.65; color:var(--muted);
+    max-width:480px; margin-bottom:40px;
+    opacity:0; animation: rise .7s ease forwards; animation-delay:.58s;
+  }
+  .cta-row{
+    display:flex; align-items:center; gap:28px; margin-bottom:64px;
+    opacity:0; animation: rise .7s ease forwards; animation-delay:.7s;
+  }
+  .btn-primary{
+    background:var(--text); color:#0b0b0d;
+    font-size:14px; font-weight:600; letter-spacing:0.03em;
+    padding:15px 30px; border-radius:999px;
+    transition:transform .25s ease, box-shadow .25s ease;
+    display:inline-block;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 30px -10px rgba(255,91,69,0.45); }
+  .btn-text{
+    font-size:14px; color:var(--text); letter-spacing:0.02em;
+    border-bottom:1px solid var(--line-strong); padding-bottom:3px;
+    transition:border-color .25s ease, opacity .25s ease;
+  }
+  .btn-text:hover{ border-image:var(--grad) 1; opacity:0.85; }
+
+  .stat-row{
+    display:flex; gap:0;
+    opacity:0; animation: rise .7s ease forwards; animation-delay:.82s;
+  }
+  .stat{ padding-right:36px; margin-right:36px; border-right:1px solid var(--line); }
+  .stat:last-child{ border-right:none; }
+  .stat .num{ font-size:20px; font-weight:700; letter-spacing:-0.01em; margin-bottom:4px; }
+  .stat .label{ font-size:11px; letter-spacing:0.1em; color:var(--muted-2); text-transform:uppercase; }
+
+  @keyframes rise{ to{ opacity:1; transform:translateY(0); } }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(255,91,69,0.45); }
+    70%{ box-shadow:0 0 0 9px rgba(255,91,69,0); }
+    100%{ box-shadow:0 0 0 0 rgba(255,91,69,0); }
+  }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section{ padding:120px 0; }
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:56px; gap:24px; flex-wrap:wrap;
+  }
+  .section-eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:11px; letter-spacing:0.16em; color:var(--muted-2);
+    text-transform:uppercase; margin-bottom:14px;
+  }
+  .section-title{
+    font-size:clamp(30px, 4vw, 44px);
+    font-weight:600; letter-spacing:-0.01em;
+  }
+  .section-note{ font-size:14px; color:var(--muted); max-width:280px; line-height:1.6; }
+
+  /* ---------- PRODUCT GRID ---------- */
+  .grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:28px 24px;
+  }
+  .card{ cursor:pointer; }
+  .card-img{
+    position:relative; overflow:hidden; border-radius:var(--radius);
+    aspect-ratio:3/4; background:var(--surface);
+    margin-bottom:16px;
+  }
+  .card-img img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform .6s cubic-bezier(.22,.9,.3,1);
+  }
+  .card:hover .card-img img{ transform:scale(1.06); }
+  .tag-new{
+    position:absolute; top:12px; left:12px;
+    background:var(--grad); color:#0b0b0d;
+    font-family:'Space Mono', monospace; font-size:10px; font-weight:700;
+    letter-spacing:0.08em; padding:5px 10px; border-radius:999px;
+  }
+  .card-name{ font-size:14.5px; font-weight:500; margin-bottom:6px; }
+  .card-bottom{ display:flex; justify-content:space-between; align-items:center; }
+  .card-price{ font-family:'Space Mono', monospace; font-size:13px; color:var(--text); }
+  .card-sizes{ font-size:11px; color:var(--muted-2); letter-spacing:0.04em; }
+
+  /* ---------- TRUST STRIP ---------- */
+  .trust{
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    position:relative;
+    background:var(--surface);
+  }
+  .trust::before{
+    content:''; position:absolute; top:-1px; left:0; right:0; height:1px;
+    background:var(--grad);
+  }
+  .trust-inner{ padding:96px 0; text-align:center; }
+  .story-eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:11px; letter-spacing:0.18em; color:var(--muted-2);
+    text-transform:uppercase; margin-bottom:20px;
+  }
+  .trust-quote{
+    font-family:'Bricolage Grotesque', sans-serif;
+    font-size:clamp(24px, 3.4vw, 38px);
+    font-weight:600; line-height:1.35; letter-spacing:-0.01em;
+    max-width:780px; margin:0 auto 28px;
+  }
+  .story-body{
+    font-size:16px; line-height:1.8; color:var(--muted);
+    max-width:600px; margin:0 auto 30px;
+  }
+  .dedication{
+    font-family:'Space Mono', monospace;
+    font-size:12.5px; letter-spacing:0.06em; color:var(--muted-2);
+    font-style:italic; margin-bottom:56px;
+    padding-bottom:32px;
+    border-bottom:1px solid var(--line);
+    display:inline-block;
+  }
+  .badges{ display:flex; justify-content:center; gap:48px; flex-wrap:wrap; }
+  .badge{ font-size:12px; letter-spacing:0.08em; color:var(--muted); text-transform:uppercase; }
+  .badge::before{ content:'— '; color:var(--muted-2); }
+
+  /* ---------- PRODUCT MODAL ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; z-index:200;
+    background:rgba(8,8,9,0.78);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    display:flex; align-items:center; justify-content:center;
+    padding:28px;
+    opacity:0; pointer-events:none;
+    transition:opacity .3s ease;
+  }
+  .modal-overlay.active{ opacity:1; pointer-events:auto; }
+  .modal{
+    background:var(--surface); border:1px solid var(--line-strong);
+    border-radius:8px; overflow:hidden;
+    max-width:920px; width:100%; max-height:88vh;
+    display:grid; grid-template-columns:1fr 1fr;
+    transform:translateY(18px) scale(.98);
+    transition:transform .4s cubic-bezier(.22,.9,.3,1);
+  }
+  .modal-overlay.active .modal{ transform:translateY(0) scale(1); }
+  .modal-image{ background:var(--surface-2); overflow:hidden; max-height:88vh; }
+  .modal-image img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .modal-body{ padding:44px 40px; overflow-y:auto; max-height:88vh; position:relative; }
+  .modal-close{
+    position:absolute; top:16px; right:16px; width:36px; height:36px;
+    border-radius:50%; background:rgba(11,11,13,0.55); border:1px solid var(--line-strong);
+    color:var(--text); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:18px; line-height:1; z-index:5;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .modal-close:hover{ background:rgba(11,11,13,0.85); transform:rotate(90deg); }
+  .modal-name{ font-size:25px; font-weight:600; letter-spacing:-0.01em; margin-bottom:8px; padding-right:30px; }
+  .modal-price{ font-family:'Space Mono', monospace; font-size:15px; color:var(--muted); margin-bottom:26px; }
+  .modal-label{
+    font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted-2);
+    margin-bottom:12px; margin-top:26px;
+  }
+  .modal-label:first-of-type{ margin-top:0; }
+  .size-row{ display:flex; gap:9px; flex-wrap:wrap; }
+  .size-pill{
+    border:1px solid var(--line-strong); padding:9px 15px; border-radius:999px;
+    font-size:13px; cursor:pointer; transition:.2s ease; user-select:none;
+  }
+  .size-pill:hover{ border-color:var(--muted); }
+  .size-pill.selected{ background:var(--text); color:#0b0b0d; border-color:var(--text); }
+  .size-note{ font-size:11.5px; color:var(--muted-2); margin-top:12px; font-style:italic; }
+  .color-row{ display:flex; gap:12px; align-items:center; }
+  .color-swatch{
+    width:32px; height:32px; border-radius:50%; cursor:pointer; position:relative;
+    border:2px solid transparent; transition:.2s ease;
+  }
+  .color-swatch::after{ content:''; position:absolute; inset:-4px; border-radius:50%; border:1px solid transparent; transition:.2s ease; }
+  .color-swatch.selected::after{ border-color:var(--text); }
+  .color-swatch.sold{ cursor:not-allowed; opacity:.3; }
+  .color-swatch.sold::before{
+    content:''; position:absolute; top:50%; left:-6px; right:-6px; height:1px;
+    background:var(--muted); transform:rotate(45deg);
+  }
+  .color-name{ font-size:12.5px; color:var(--muted); margin-top:10px; }
+  .details-list{ list-style:none; }
+  .details-list li{
+    font-size:13.5px; color:var(--muted); line-height:1.85;
+    padding-left:16px; position:relative;
+  }
+  .details-list li::before{ content:'—'; position:absolute; left:0; color:var(--muted-2); }
+  .btn-add{
+    width:100%; margin-top:32px;
+    background:var(--grad); color:#0b0b0d; font-weight:700; font-size:14px;
+    letter-spacing:0.02em; padding:16px; border-radius:999px; border:none;
+    cursor:pointer; transition:transform .2s ease, opacity .2s ease;
+  }
+  .btn-add:hover{ transform:translateY(-2px); }
+  .btn-add.added{ background:var(--text); }
+
+  @media (max-width:720px){
+    .modal{ grid-template-columns:1fr; max-height:92vh; overflow-y:auto; }
+    .modal-image{ max-height:340px; }
+    .modal-body{ max-height:none; overflow-y:visible; padding:32px 24px; }
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{ position:relative; padding-top:100px; }
+  footer::before{
+    content:''; position:absolute; top:0; left:0; right:0; height:1px; background:var(--grad);
+  }
+  .footer-grid{
+    display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:48px;
+    padding-bottom:70px;
+  }
+  .footer-brand .brand{ margin-bottom:18px; }
+  .footer-tag{ color:var(--muted); font-size:14px; max-width:280px; line-height:1.6; margin-bottom:6px; }
+  .footer-pitch{ font-size:13px; color:var(--muted-2); font-style:italic; }
+  .footer-col h4{
+    font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted-2);
+    margin-bottom:18px; font-weight:600;
+  }
+  .footer-col p, .footer-col a{ font-size:14px; color:var(--muted); line-height:2; display:block; }
+  .footer-col a:hover{ color:var(--text); }
+  .footer-bottom{
+    border-top:1px solid var(--line); padding:26px 0;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:12px; color:var(--muted-2);
+  }
+  .footer-bottom .mono{ letter-spacing:0.04em; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:900px){
+    .grid{ grid-template-columns:repeat(2, 1fr); }
+    .nav-links{ display:none; }
+    .footer-grid{ grid-template-columns:1fr; gap:36px; }
+    .stat{ padding-right:22px; margin-right:22px; }
+  }
+  @media (max-width:520px){
+    .wrap{ padding:0 20px; }
+    .cta-row{ flex-direction:column; align-items:flex-start; gap:18px; }
+    .badges{ gap:22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    .eyebrow,.hero-logo,h1.headline span,.subhead,.cta-row,.stat-row{ opacity:1 !important; transform:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <img src="Images/logo.jpg" alt="Mornoleto logo">
+      <span>MORNOLETO</span>
+    </div>
+    <div class="nav-links">
+      <a href="#new-in">Shop</a>
+      <a href="#story">About us</a>
+      <a href="#visit">Visit</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#new-in" class="bag"><span class="dot"></span>Cart · 0</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="eyebrow"><span class="pulse"></span> MEN'S RESALE BOUTIQUE — ALEXANDRIA, EGYPT</div>
+      <img class="hero-logo" src="Images/logo.jpg" alt="Mornoleto logo">
+      <h1 class="headline">
+        <span>Dress with</span>
+        <span class="grad-text">trust.</span>
+      </h1>
+      <p class="subhead">Every piece is hand-checked, photographed exactly as it ships, and pulled from a closet 59.7K people already follow. No surprises — just what you saw.</p>
+      <div class="cta-row">
+        <a href="#new-in" class="btn-primary">Shop New In</a>
+        <a href="#story" class="btn-text">Our Story →</a>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="num">+144.7K</div><div class="label">Followers on Facebook & Instagram</div></div>
+        <div class="stat"><div class="num">1,257</div><div class="label">Drops Shared</div></div>
+        <div class="stat"><div class="num">Alex.</div><div class="label">Egypt</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="new-in">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">New In — This Week's Drop</div>
+        <h2 class="section-title">Fresh off the rail.</h2>
+      </div>
+      <p class="section-note">Pulled straight from this week's posts — verified pieces, true-to-photo condition, sized for the rack.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card" data-id="jeans">
+        <div class="card-img"><span class="tag-new">NEW</span><img src="Images/2.jpg" alt="Distressed wide-leg jeans"></div>
+        <div class="card-name">Distressed Wide-Leg Jeans</div>
+        <div class="card-bottom"><span class="card-price">EGP 1,450</span><span class="card-sizes">30·32·34</span></div>
+      </div>
+      <div class="card" data-id="af1">
+        <div class="card-img"><span class="tag-new">NEW</span><img src="Images/8.jpg" alt="Linen shirt and shorts set"></div>
+        <div class="card-name">pure linen suit</div>
+        <div class="card-bottom"><span class="card-price">EGP 3,200</span><span class="card-sizes">S·M·L·XL</span></div>
+      </div>
+      <div class="card" data-id="navy">
+        <div class="card-img"><span class="tag-new">NEW</span><img src="Images/1.jpg" alt="Ribbed trim knit tee"></div>
+        <div class="card-name">Ribbed Trim Knit Tee</div>
+        <div class="card-bottom"><span class="card-price">EGP 950</span><span class="card-sizes">S·M·L·XL</span></div>
+      </div>
+      <div class="card" data-id="white">
+        <div class="card-img"><img src="Images/3.jpg" alt="Racing team graphic tee"></div>
+        <div class="card-name">STWD T-shirt</div>
+        <div class="card-bottom"><span class="card-price">EGP 850</span><span class="card-sizes">S·M·L·XL</span></div>
+      </div>
+      <div class="card" data-id="boss">
+        <div class="card-img"><img src="Images/4.jpg" alt="Suede buckle slide sandals"></div>
+        <div class="card-name">Suede Buckle Slide Sandals</div>
+        <div class="card-bottom"><span class="card-price">EGP 2,650</span><span class="card-sizes">40·41·42·43·44</span></div>
+      </div>
+      <div class="card" data-id="resort">
+        <div class="card-img"><img src="Images/6.jpg" alt="Brasil graphic World cup T-shirt"></div>
+        <div class="card-name">Brasil graphic World cup T-shirt</div>
+        <div class="card-bottom"><span class="card-price">EGP 1,650</span><span class="card-sizes">S·M·L·XL</span></div>
+      </div>
+      <div class="card" data-id="polo">
+        <div class="card-img"><img src="Images/5.jpg" alt="Striped rugby Box-fit polo outfit"></div>
+        <div class="card-name">Striped rugby Box-fit polo</div>
+        <div class="card-bottom"><span class="card-price">EGP 1,350</span><span class="card-sizes">M·L·XL</span></div>
+      </div>
+      <div class="card" data-id="shorts">
+        <div class="card-img"><img src="Images/7.jpg" alt="Light wash denim shorts"></div>
+        <div class="card-name">Light Wash Denim Shorts</div>
+        <div class="card-bottom"><span class="card-price">EGP 1,100</span><span class="card-sizes">30·32·34</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust" id="story">
+  <div class="wrap trust-inner">
+    <div class="story-eyebrow">Our Story — The Name</div>
+    <p class="trust-quote">Mornoleto isn't a made-up word. It's named after <span class="grad-text">someone who mattered.</span></p>
+    <p class="story-body">The name carries the memory of Dr. Marwan Amr — the founder's late brother. Mornoleto is how that gets carried forward, one drop at a time.</p>
+    <div class="dedication">In loving memory of Dr. Marwan Amr</div>
+    <div class="badges">
+      <span class="badge">Verified Pieces</span>
+      <span class="badge">Real Photos, No Surprises</span>
+      <span class="badge">Alexandria, Fast Hands</span>
+    </div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-image"><img id="modalImg" src="" alt=""></div>
+    <div class="modal-body">
+      <div class="modal-close" id="modalClose">✕</div>
+      <h3 class="modal-name" id="modalName"></h3>
+      <div class="modal-price" id="modalPrice"></div>
+
+      <div class="modal-label">Size</div>
+      <div class="size-row" id="sizeRow"></div>
+      <div class="size-note">Only one of each size — first come, first served.</div>
+
+      <div class="modal-label">Colour</div>
+      <div class="color-row" id="colorRow"></div>
+      <div class="color-name" id="colorName"></div>
+
+      <div class="modal-label">Details</div>
+      <ul class="details-list" id="detailsList"></ul>
+
+      <button class="btn-add" id="addToBagBtn">Add to Cart</button>
+    </div>
+  </div>
+</div>
+
+<footer id="visit">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand"><img src="Images/logo.jpg" alt="Mornoleto logo"><span>MORNOLETO</span></div>
+        <p class="footer-tag">Mornoleto — Dress with trust. Curated menswear, sold straight from the rail.</p>
+        <p class="footer-pitch">Previously DM-only. Now, browse anytime.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Visit</h4>
+        <p>Um Alsultan, Wardian</p>
+        <p>Alexandria, Egypt</p>
+        <p class="mono">01021661978</p>
+      </div>
+      <div class="footer-col">
+        <h4>Follow</h4>
+        <a href="https://www.instagram.com/mornoleto/">Instagram — @mornoleto</a>
+        <a href="https://www.facebook.com/profile.php?id=100063696684745">Facebook — Mornoleto</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Mornoleto. All rights reserved.</span>
+      <span class="mono">I like my money right where i can see it...hanging in my closet - Carrie Bradshaw</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 40){ nav.classList.add('scrolled'); }
+    else{ nav.classList.remove('scrolled'); }
+  });
+
+  const PRODUCTS = {
+    jeans: {
+      name: "Distressed Wide-Leg Jeans", price: "EGP 1,450",
+      sizes: ["30","32","34"],
+      colors: [
+        { name:"Vintage Blue Wash", hex:"#4a5a72", available:true }
+      ],
+      details: [
+        "Condition: Excellent, gently worn once",
+        "Fit: Wide-leg, drawstring waist tie, true to size",
+        "Material: Mid-weight cotton denim with distressed whiskering",
+        "Exact pair shown in photos — no substitutions"
+      ]
+    },
+    af1: {
+      name: "Linen Shirt & Shorts Set", price: "EGP 3,200",
+      sizes: ["S","M","L","XL"],
+      colors: [
+        { name:"Off-White / Cream", hex:"#ece4d3", available:true }
+      ],
+      details: [
+        "Condition: Excellent — like new",
+        "Fit: Relaxed camp-collar shirt with matching drawstring shorts",
+        "Material: Lightweight linen-cotton blend",
+        "Sold as a matching co-ord set"
+      ]
+    },
+    navy: {
+      name: "Ribbed Trim Knit Tee", price: "EGP 950",
+      sizes: ["S","M","L","XL"],
+      colors: [
+        { name:"Navy", hex:"#1c2536", available:true }
+      ],
+      details: [
+        "Condition: Excellent — like new",
+        "Fit: Regular, true to size (shown: size L)",
+        "Material: Lightweight cotton knit",
+        "Contrast white ribbed trim at collar and cuffs"
+      ]
+    },
+    white: {
+      name: "Racing Team Graphic Tee", price: "EGP 850",
+      sizes: ["S","M","L","XL"],
+      colors: [
+        { name:"Black", hex:"#141414", available:true }
+      ],
+      details: [
+        "Condition: Excellent",
+        "Fit: Regular, relaxed through the body",
+        "Material: Cotton jersey",
+        "Bold racing-team graphic print at chest"
+      ]
+    },
+    boss: {
+      name: "Suede Buckle Slide Sandals", price: "EGP 2,650",
+      sizes: ["40","41","42","43","44"],
+      colors: [
+        { name:"Olive Green", hex:"#5b6b4f", available:true }
+      ],
+      details: [
+        "Condition: New with tags",
+        "Fit: Adjustable double buckle strap, true to size",
+        "Material: Suede upper, molded footbed",
+        "Textured contrast outsole"
+      ]
+    },
+    resort: {
+      name: "Brasil Graphic Ringer Tee", price: "EGP 1,650",
+      sizes: ["S","M","L","XL"],
+      colors: [
+        { name:"Pale Yellow / Green", hex:"#f0e8a0", available:true }
+      ],
+      details: [
+        "Condition: Excellent",
+        "Fit: Regular, ringer collar and cuffs",
+        "Material: Cotton jersey",
+        "Bold \"BRASIL 26\" back print, retro football styling"
+      ]
+    },
+    polo: {
+      name: "Striped Rugby Polo", price: "EGP 1,350",
+      sizes: ["M","L","XL"],
+      colors: [
+        { name:"Olive Multi-Stripe", hex:"#5c5f47", available:true }
+      ],
+      details: [
+        "Condition: Excellent — like new",
+        "Fit: Relaxed, rugby-style collar",
+        "Material: Striped knit cotton",
+        "Collegiate-style chest graphic, runs true to size"
+      ]
+    },
+    shorts: {
+      name: "Light Wash Denim Shorts", price: "EGP 1,100",
+      sizes: ["30","32","34"],
+      colors: [
+        { name:"Light Blue Wash", hex:"#a8bccf", available:true }
+      ],
+      details: [
+        "Condition: Excellent",
+        "Fit: Relaxed, knee-length, five-pocket",
+        "Material: Cotton denim",
+        "Drawstring waist"
+      ]
+    }
+  };
+
+  const overlay = document.getElementById('modalOverlay');
+  const modalImg = document.getElementById('modalImg');
+  const modalName = document.getElementById('modalName');
+  const modalPrice = document.getElementById('modalPrice');
+  const sizeRow = document.getElementById('sizeRow');
+  const colorRow = document.getElementById('colorRow');
+  const colorName = document.getElementById('colorName');
+  const detailsList = document.getElementById('detailsList');
+  const addBtn = document.getElementById('addToBagBtn');
+  const bagLink = document.querySelector('.bag');
+  let bagCount = 0;
+  let addResetTimer = null;
+
+  function openModal(id){
+    const p = PRODUCTS[id];
+    if(!p) return;
+    const cardImg = document.querySelector(`.card[data-id="${id}"] .card-img img`);
+    modalImg.src = cardImg ? cardImg.src : '';
+    modalImg.alt = p.name;
+    modalName.textContent = p.name;
+    modalPrice.textContent = p.price;
+
+    sizeRow.innerHTML = p.sizes.map((s,i) =>
+      `<div class="size-pill${i===0 ? ' selected':''}" data-size="${s}">${s}</div>`
+    ).join('');
+
+    colorRow.innerHTML = p.colors.map((c,i) => {
+      const soldClass = c.available ? '' : ' sold';
+      const selectedClass = (c.available && !colorRow.querySelector('.color-swatch:not(.sold)')) ? '' : '';
+      return `<div class="color-swatch${soldClass}" style="background:${c.hex}" data-name="${c.name}" data-available="${c.available}" title="${c.name}${c.available ? '' : ' — sold out'}"></div>`;
+    }).join('');
+    const firstAvailable = colorRow.querySelector('.color-swatch:not(.sold)');
+    if(firstAvailable){
+      firstAvailable.classList.add('selected');
+      colorName.textContent = firstAvailable.dataset.name;
+    } else {
+      colorName.textContent = '';
+    }
+
+    detailsList.innerHTML = p.details.map(d => `<li>${d}</li>`).join('');
+
+    addBtn.textContent = 'Add to Cart';
+    addBtn.classList.remove('added');
+    if(addResetTimer) clearTimeout(addResetTimer);
+
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(){
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => openModal(card.dataset.id));
+  });
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+
+  sizeRow.addEventListener('click', (e) => {
+    const pill = e.target.closest('.size-pill');
+    if(!pill) return;
+    sizeRow.querySelectorAll('.size-pill').forEach(p => p.classList.remove('selected'));
+    pill.classList.add('selected');
+  });
+
+  colorRow.addEventListener('click', (e) => {
+    const swatch = e.target.closest('.color-swatch');
+    if(!swatch || swatch.classList.contains('sold')) return;
+    colorRow.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+    swatch.classList.add('selected');
+    colorName.textContent = swatch.dataset.name;
+  });
+
+  addBtn.addEventListener('click', () => {
+    bagCount++;
+    bagLink.innerHTML = `<span class="dot"></span>Cart · ${bagCount}`;
+    addBtn.textContent = 'Added ✓';
+    addBtn.classList.add('added');
+    if(addResetTimer) clearTimeout(addResetTimer);
+    addResetTimer = setTimeout(() => {
+      addBtn.textContent = 'Add to Cart';
+      addBtn.classList.remove('added');
+    }, 1400);
+  });
+</script>
+
+</body>
+</html>
