@@ -101,7 +101,7 @@
   }
   .hero-inner{ position:relative; z-index:2; max-width:760px; }
   .eyebrow{
-    display:flex; align-items:center; gap:10px;
+    display:flex; align-items:center; flex-wrap:wrap; gap:10px;
     font-size:12px; letter-spacing:0.18em; color:var(--muted);
     margin-bottom:28px;
     opacity:0; animation: rise .7s ease forwards; animation-delay:.1s;
@@ -359,16 +359,45 @@
   .footer-bottom .mono{ letter-spacing:0.04em; }
 
   /* ---------- RESPONSIVE ---------- */
+  @media (max-width:1024px){
+    .wrap{ padding:0 26px; }
+    .grid{ grid-template-columns:repeat(3, 1fr); gap:24px 20px; }
+  }
   @media (max-width:900px){
     .grid{ grid-template-columns:repeat(2, 1fr); }
     .nav-links{ display:none; }
     .footer-grid{ grid-template-columns:1fr; gap:36px; }
-    .stat{ padding-right:22px; margin-right:22px; }
+    .footer-bottom{ flex-direction:column; align-items:flex-start; gap:10px; }
+    .stat-row{ flex-direction:column; gap:14px; }
+    .stat{ padding-right:0; margin-right:0; padding-bottom:14px; border-right:none; border-bottom:1px solid var(--line); }
+    .stat:last-child{ border-bottom:none; padding-bottom:0; }
+    .hero{ padding-top:100px; padding-bottom:56px; }
+    .hero::before{ width:520px; height:520px; }
+    .section{ padding:90px 0; }
+    .trust-inner{ padding:72px 0; }
+    footer{ padding-top:80px; }
   }
-  @media (max-width:520px){
+  @media (max-width:600px){
     .wrap{ padding:0 20px; }
     .cta-row{ flex-direction:column; align-items:flex-start; gap:18px; }
     .badges{ gap:22px; }
+    .grid{ gap:18px 14px; }
+    .hero{ padding-top:90px; padding-bottom:48px; }
+    .hero::before{ width:380px; height:380px; }
+    .section{ padding:64px 0; }
+    .trust-inner{ padding:56px 0; }
+    footer{ padding-top:64px; }
+    .modal-overlay{ padding:14px; }
+    .modal-body{ padding:26px 20px; }
+    .modal-image{ max-height:260px; }
+    .modal-name{ font-size:21px; padding-right:26px; }
+  }
+  @media (max-width:380px){
+    .brand img{ width:28px; height:28px; }
+    .brand span{ font-size:12.5px; letter-spacing:0.1em; }
+    .bag{ padding:6px 12px; font-size:12px; gap:6px; }
+    .nav-cta{ gap:10px; }
+    .btn-primary{ padding:13px 24px; }
   }
 
   @media (prefers-reduced-motion: reduce){
